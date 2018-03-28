@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
-    "build": "babel src --out-dir lib",
+    "build": "npm run clean && babel src --out-dir lib --ignore '__tests__/*'",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "storybook": "start-storybook -p 6006",
