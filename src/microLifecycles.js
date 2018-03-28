@@ -2,7 +2,7 @@ const sym = typeof Symbol === 'object' ? Symbol('mcycles') : '@@mcycles';
 const noop = () => {};
 
 const microLifecycles = props => {
-    const {$attach, $update, $detach, ref} = props;
+    const {$attach, $update, $detach, ref, ...rest} = props;
 
     if (process.env.NODE_ENV !== 'production') {
         if (ref && typeof ref !== 'function') {
@@ -14,48 +14,55 @@ const microLifecycles = props => {
         }
     }
 
-    if (ref) ref(el);
+    if (!$attach && !$update && !$detach)
+        return props;
 
-    if (!el) return;
+    rest.ref = el => {
+        if (ref) ref(el);
 
-    let ctx;
-
-    if (!el[sym]) {
-        el[sym] = props;
-
-        const observer = new MutationObserver(mutations => {
-            for (let i = 0; i < mutations.length; i++) {
-                const mutation = mutations[i];
-
-                if (mutation.removedNodes.length) {
-                    const nodes = mutation.removedNodes;
-
-                    for (let j = 0; j < nodes.length; j++) {
-                        if (nodes[j] === el) {
-                            observer.disconnect();
-
-                            const oldProps = el[sym];
-
-                            (oldProps.$detach || noop)(el, oldProps);
-
-                            return;
+        if (!el) return;
+    
+        let ctx;
+    
+        if (!el[sym]) {
+            el[sym] = props;
+    
+            const observer = new MutationObserver(mutations => {
+                for (let i = 0; i < mutations.length; i++) {
+                    const mutation = mutations[i];
+    
+                    if (mutation.removedNodes.length) {
+                        const nodes = mutation.removedNodes;
+    
+                        for (let j = 0; j < nodes.length; j++) {
+                            if (nodes[j] === el) {
+                                observer.disconnect();
+    
+                                const oldProps = el[sym];
+    
+                                (oldProps.$detach || noop)(el, oldProps);
+    
+                                return;
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+    
+            observer.observe(el.parentNode, {childList: true});
 
-        observer.observe(el.parentNode, {childList: true});
+            ($attach || noop)(el, props);
+    
+            return;
+        }
+    
+        const oldProps = el[sym];
+    
+        el[sym] = props;
+        ($update || noop)(el, props, oldProps);
+    };
 
-        ($attach || noop)(el, props);
-
-        return;
-    }
-
-    const oldProps = el[sym];
-
-    el[sym] = props;
-    ($update || noop)(el, props, oldProps);
+    return rest;
 };
 
-export default;
+export default microLifecycles;
