@@ -2,9 +2,9 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {linkTo} from '@storybook/addon-links';
-import createHyperscript from '../src/createHyperscript';
+import createHyperscript from '../src/patch';
 
-const h = createHyperscript(React.createElement);
+const h = React.createElement;
 
 class Demo1 extends React.Component {
     state = {

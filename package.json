@@ -1,7 +1,7 @@
 {
   "name": "react-micro-lifecycles",
   "version": "0.0.1",
-  "description": "Better JSX for busy developers",
+  "description": "Micro life-cycles form React DOM nodes",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",

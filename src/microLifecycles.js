@@ -2,22 +2,35 @@ const sym = typeof Symbol === 'object' ? Symbol('mcycles') : '@@mcycles';
 const noop = () => {};
 
 const microLifecycles = props => {
-    const {$attach, $update, $detach, ref, ...rest} = props;
+    const $attach = props.$attach;
+    const $update = props.$update;
+    const $detach = props.$detach;
+    const ref = props.ref;
+
+    let rest = props;
 
     if (process.env.NODE_ENV !== 'production') {
-        if (ref && typeof ref !== 'function') {
-            console.error(
-                'micro-lifecycles received props with ref, expected ref to be a function, "' +
-                    typeof ref +
-                    '" provided.'
-            );
-        }
+        rest = Object.assign({}, props);
     }
+
+    delete rest.$attach;
+    delete rest.$update;
+    delete rest.$detach;
 
     if (!$attach && !$update && !$detach)
         return props;
 
     rest.ref = el => {
+        if (process.env.NODE_ENV !== 'production') {
+            if (ref && typeof ref !== 'function') {
+                console.error(
+                    'react-micro-lifecycles received props with ref, expected ref to be a function, "' +
+                        typeof ref +
+                        '" provided.'
+                );
+            }
+        }
+
         if (ref) ref(el);
 
         if (!el) return;
