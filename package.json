@@ -18,7 +18,6 @@
     "url": "https://github.com/streamich/react-micro-lifecycles.git"
   },
   "dependencies": {
-    "classnames": "^2.2.5"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.3.15",
