@@ -24,9 +24,7 @@ const microLifecycles = props => {
         if (process.env.NODE_ENV !== 'production') {
             if (ref && typeof ref !== 'function') {
                 console.error(
-                    'react-micro-lifecycles received props with ref, expected ref to be a function, "' +
-                        typeof ref +
-                        '" provided.'
+                    `react-micro-lifecycles received props with ref, expected ref to be a function, "${typeof ref}" provided.`
                 );
             }
         }
@@ -34,8 +32,6 @@ const microLifecycles = props => {
         if (ref) ref(el);
 
         if (!el) return;
-    
-        let ctx;
     
         if (!el[sym]) {
             el[sym] = props;
@@ -78,4 +74,18 @@ const microLifecycles = props => {
     return rest;
 };
 
-export default microLifecycles;
+const createHyperscriptUnstable = (h) => {
+    return (...args) => {
+        const type = args[0];
+
+        if (typeof type !== 'string')
+            return h(...args);
+
+        args[1] = microLifecycles(args[1] || {});
+
+        return h(...args);
+    };
+};
+
+
+export default createHyperscriptUnstable;
