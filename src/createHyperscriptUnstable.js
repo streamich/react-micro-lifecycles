@@ -76,6 +76,11 @@ const microLifecycles = props => {
 
 const createHyperscriptUnstable = (h) => {
     return (...args) => {
+        const type = args[0];
+
+        if (typeof type !== 'string')
+            return h(...args);
+
         args[1] = microLifecycles(args[1] || {});
 
         return h(...args);

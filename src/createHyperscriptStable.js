@@ -43,7 +43,8 @@ const createHyperscriptStable = (h, Component) => {
     }
 
     return (type, props, ...children) => {
-        if (!props) return h(type, props, ...children);
+        if (!props || (typeof type !== 'string'))
+            return h(type, props, ...children);
     
         if (!props.$attach && !props.$update && !props.$detach)
             return h(type, props, ...children);
