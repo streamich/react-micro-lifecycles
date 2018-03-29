@@ -2,7 +2,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {linkTo} from '@storybook/addon-links';
-import createHyperscript from '../src/patch';
+import '../src/patch';
 
 const h = React.createElement;
 

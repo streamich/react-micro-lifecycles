@@ -1,8 +1,8 @@
 const noop = () => {};
 
 const createHyperscriptStable = (h, Component) => {
-    export class Lifecycles extends Component {
-        static defaultProp = {
+    class Lifecycles extends Component {
+        static defaultProps = {
             $attach: noop,
             $update: noop,
             $detach: noop,
@@ -42,14 +42,11 @@ const createHyperscriptStable = (h, Component) => {
         }
     }
 
-    return (...args) => {
-        const type = args[0];
-        const props = args[1];
-
-        if (!props) return h(...args);
+    return (type, props, ...children) => {
+        if (!props) return h(type, props, ...children);
     
         if (!props.$attach && !props.$update && !props.$detach)
-            return h(...args);
+            return h(type, props, ...children);
 
         if (process.env.NODE_ENV !== 'production') {
             if (props.ref && typeof props.ref !== 'function') {
@@ -64,7 +61,7 @@ const createHyperscriptStable = (h, Component) => {
 
         delete props.ref;
 
-        return h(Lifecycles, props);
+        return h(Lifecycles, props, ...children);
     };
 };
 
