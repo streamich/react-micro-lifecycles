@@ -1,13 +1,5 @@
 # react-micro-lifecycles
 
-DOM element life-cycles for JSX.
-
-Install:
-
-```js
-require('react-micro-lifecycles/lib/patch');
-```
-
 Use micro-life-cycles:
 
 ```jsx
@@ -17,3 +9,18 @@ Use micro-life-cycles:
   $detach={(el, oldProps) => console.log('element detached: ', el, oldProps)}
 />
 ```
+
+Installation:
+
+```js
+require('react-micro-lifecycles/lib/patchStable');
+```
+
+or
+
+```js
+require('react-micro-lifecycles/lib/patchUnstable');
+```
+
+`patchStable` uses React stateful components, `patchUnstable` does not use React stateful components &mdash;
+it uses only `ref` prop.
