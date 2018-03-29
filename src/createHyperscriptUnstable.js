@@ -1,5 +1,3 @@
-import microLifecycles from './microLifecycles';
-
 const sym = typeof Symbol === 'object' ? Symbol('mcycles') : '@@mcycles';
 const noop = () => {};
 
