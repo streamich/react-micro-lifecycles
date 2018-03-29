@@ -1,11 +1,11 @@
-import microLifecycles from '../microLifecycles';
+import createHyperscriptUnstable from '../createHyperscriptUnstable';
 
 global.MutationObserver = function () {};
 global.MutationObserver.prototype.observe = function () {};
 
-describe('microLifecycles()', () => {
+describe('createHyperscriptUnstable()', () => {
     it('exists', () => {
-        expect(typeof microLifecycles).toBe('function');
+        expect(typeof createHyperscriptUnstable).toBe('function');
     });
 
     it('does not create .ref, if not necessary', () => {
@@ -13,8 +13,12 @@ describe('microLifecycles()', () => {
         const props = {
             foo: 'bar'
         };
+        const createElement = jest.fn();
+        const h = createHyperscriptUnstable(createElement);
 
-        const newProps = microLifecycles(props);
+        h('div', props);
+
+        const newProps = createElement.mock.calls[0][1];
 
         expect(typeof newProps.ref).toBe('undefined');
     });
@@ -25,7 +29,12 @@ describe('microLifecycles()', () => {
             $attach,
             foo: 'bar'
         };
-        const newProps = microLifecycles(props);
+        const createElement = jest.fn();
+        const h = createHyperscriptUnstable(createElement);
+
+        h('div', props);
+
+        const newProps = createElement.mock.calls[0][1];
 
         expect(typeof newProps.ref).toBe('function');
         expect($attach).toHaveBeenCalledTimes(0);
@@ -63,8 +72,12 @@ describe('microLifecycles()', () => {
             $update,
             foo: 'bar'
         };
+        const createElement = jest.fn();
+        const h = createHyperscriptUnstable(createElement);
 
-        let newProps = microLifecycles(props);
+        h('div', props);
+
+        let newProps = createElement.mock.calls[0][1];
 
         expect(typeof newProps.ref).toBe('function');
         expect($update).toHaveBeenCalledTimes(0);
@@ -87,10 +100,13 @@ describe('microLifecycles()', () => {
             foo: 'bar'
         });
 
-        newProps = microLifecycles({
+        h('div', {
             $update,
             foo: 'bar2'
         });
+
+        newProps = createElement.mock.calls[1][1];
+
         newProps.ref(null);
         newProps.ref(el);
 
