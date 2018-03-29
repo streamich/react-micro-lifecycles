@@ -2,6 +2,13 @@
 
 DOM element life-cycles for JSX.
 
+Install:
+
+```js
+require('react-micro-lifecycles/lib/patch');
+```
+
+Use micro-life-cycles:
 
 ```jsx
 <div
