@@ -1,4 +1,4 @@
 import React, {createElement} from 'react';
-import createHyperscript from './createHyperscript';
+import {createHyperscript} from './index';
 
 React.createElement = createHyperscript(createElement);
